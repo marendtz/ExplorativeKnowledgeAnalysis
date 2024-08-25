@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsmath} 
+
+\begin{document}
+
+\renewcommand{\thealgorithm}{}
+\begin{algorithm}
+\caption{Causal mediation analysis for one data tuple}
+\begin{algorithmic}
+\STATE \textbf{Data:} Aligned and misaligned input data \textit{data\_tuple}, Model \textit{model}, Layer Number \textit{depth}, Head Number \textit{heads}, Embedding Dimension \textit{k}, Sequence Length \textit{t}
+\STATE \textbf{Initialization:} Set model to evaluation mode, Initialize variables for storing results
+\STATE \textbf{Procedure:}
+\begin{itemize}
+    \item Run model on aligned and misaligned data to get baseline probabilities, attention outputs and feedforward outputs
+    \item Calculate the total effect by comparing the aligned and misaligned baseline probabilities
+    \item Store the total effect
+    \FOR{mediator \textbf{in} mediators (model, depth, heads, k, t)}
+        \begin{itemize}
+            \item Run model on misaligned data with the mediator output fixed to its output on aligned data
+            \item Calculate the direct effect by comparing the aligned baseline probabilities with the probabilities obtained from the adapted run
+            \item Run model on aligned data with the mediator output fixed to its output on misaligned data
+            \item Calculate the indirect effect by comparing the aligned baseline probabilities with the probabilities obtained from the adapted run
+            \item Store the direct and indirect effects
+        \end{itemize}
+    \ENDFOR
+\end{itemize}
+
+\STATE \textbf{Return:} Total, direct and indirect effects of mediators for the specified data tuple
+\end{algorithmic}
+\end{algorithm}
+
+\end{document}
